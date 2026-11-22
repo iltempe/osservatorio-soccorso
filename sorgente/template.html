@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Osservatorio Sottopasso del Soccorso</title>
+<style>
+  :root{--ink:#16181d;--muted:#5b616e;--line:#e4e6ea;--bg:#fafaf8;--card:#fff;--red:#c8312b;--amber:#b7791f;--blue:#2b5fa8;--green:#2f7d4f}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
+  .wrap{max-width:860px;margin:0 auto;padding:24px 18px 64px}
+  header{border-bottom:3px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+  .kicker{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--red);font-weight:700}
+  h1{font-size:34px;line-height:1.1;margin:6px 0 8px}
+  .sub{color:var(--muted);font-size:15px;margin:0}
+  nav{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:14px}
+  nav a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+  h2{font-size:22px;margin:40px 0 6px}
+  h2 + p.lead{margin-top:0;color:var(--muted)}
+  .status{background:var(--ink);color:#fff;border-radius:10px;padding:18px 20px}
+  .status .big{font-size:22px;font-weight:700;margin:0 0 8px}
+  .status ul{margin:0;padding-left:18px}
+  .status li{margin:3px 0}
+  .status a{color:#ffd27a}
+  .nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:14px}
+  .num{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .num .v{font-size:28px;font-weight:800;line-height:1.1}
+  .num .l{font-size:14px;color:var(--muted);margin-top:4px}
+  .red{color:var(--red)} .amber{color:var(--amber)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  .bars{display:flex;flex-direction:column;gap:10px}
+  .bar-row{display:grid;grid-template-columns:92px 1fr;gap:10px;align-items:center;font-size:14px}
+  .bar-track{background:#f0f1f3;border-radius:6px;height:30px;position:relative}
+  .bar-fill{height:100%;border-radius:6px;background:var(--red)}
+  .bar-fill.blue{background:var(--blue)}
+  .bar-lab{position:absolute;left:8px;top:5px;font-weight:700;color:#fff;font-size:13px;white-space:nowrap}
+  .bar-lab.out{color:var(--ink)}
+  .bar-note{grid-column:2;font-size:13px;color:var(--muted);margin-top:-6px}
+  table{width:100%;border-collapse:collapse;font-size:15px;table-layout:auto}
+  .card{overflow-x:auto}
+  th,td{text-align:left;padding:9px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:13px;color:var(--muted);font-weight:600}
+  td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+  tr.tot td{font-weight:800;border-top:2px solid var(--ink);border-bottom:none}
+  .src{font-size:12px;white-space:normal}
+  .src a{display:inline-block;color:var(--blue);text-decoration:none;border:1px solid #cfdaf0;border-radius:4px;padding:0 4px;margin:0 3px 3px 0;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:top}
+  td.src{min-width:120px}
+  .note{font-size:13px;color:var(--muted);margin:10px 0 0}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+  .filters button{font:inherit;font-size:14px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 12px;cursor:pointer}
+  .filters button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .tl{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+  .tl li{position:relative;padding:0 0 16px 18px}
+  .tl li::before{content:"";position:absolute;left:-6px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--ink)}
+  .tl li.Complanari::before,.tl li.Prato-Campi::before{background:var(--amber)}
+  .tl .d{font-size:13px;font-weight:700;color:var(--muted)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;border-radius:4px;padding:1px 6px;margin-left:6px;background:#eef0f3;color:var(--muted)}
+  .tag.ausiliaria{background:#fbefd9;color:#8a5a12}
+  .tl .e{margin:2px 0 3px}
+  .promise{display:grid;grid-template-columns:110px 1fr;gap:4px 12px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .promise .when{font-weight:800;font-size:17px}
+  .promise .who{font-size:13px;color:var(--muted)}
+  ol.fonti{padding-left:0;list-style:none;font-size:14px}
+  ol.fonti li{padding:7px 0;border-bottom:1px solid var(--line)}
+  ol.fonti .id{font-weight:700;margin-right:6px}
+  ol.fonti .tipo{font-size:11px;font-weight:700;text-transform:uppercase;border-radius:4px;padding:1px 6px;margin-left:6px}
+  .tipo.atto{background:#e3f1e8;color:var(--green)}
+  .tipo.stampa{background:#eef0f3;color:var(--muted)}
+  ol.fonti a{color:var(--ink);word-break:break-word}
+  .dl{display:flex;flex-direction:column;gap:8px}
+  .dl-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:8px 0;border-bottom:1px solid var(--line)}
+  .dl-row .name{font-weight:700;min-width:190px}
+  .dl-row a,.dl-row button{font:inherit;font-size:14px;border:1px solid var(--ink);background:#fff;color:var(--ink);border-radius:6px;padding:4px 10px;cursor:pointer;text-decoration:none}
+  .msg{font-size:13px;color:var(--green)}
+
+  .pill{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 8px;white-space:nowrap}
+  .pill.fatto{background:#e3f1e8;color:var(--green)} .pill.in{background:#fbefd9;color:#8a5a12} .pill.da{background:#eef0f3;color:var(--muted)}
+  .fase{display:grid;grid-template-columns:90px 1fr;gap:4px 12px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .fase .m{font-weight:800;font-size:18px}
+  .gantt{position:relative;font-size:12px}
+  .g-axis{display:grid;grid-template-columns:repeat(4,1fr);margin-left:70px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:4px}
+  .g-row{display:grid;grid-template-columns:70px 1fr;align-items:center;height:30px}
+  .g-track{position:relative;height:20px;background:repeating-linear-gradient(90deg,#f3f4f6 0,#f3f4f6 calc(25% - 1px),#e4e6ea calc(25% - 1px),#e4e6ea 25%)}
+  .g-bar{position:absolute;top:0;height:20px;border-radius:4px;background:var(--red)}
+  .g-bar.f1{background:#9aa5b8}.g-bar.f3{background:var(--amber)}.g-bar.f4{background:var(--green)}
+
+  .g-ctrl{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+  .g-ctrl button{font:inherit;font-size:13px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px;cursor:pointer}
+  .g-ctrl button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .g-legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--muted);margin-bottom:8px}
+  .lg{display:inline-block;width:14px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+  .lg.bar{background:var(--ink)} .lg.late{background:repeating-linear-gradient(45deg,var(--red) 0 3px,#f3c6c3 3px 6px)} .lg.run{background:var(--amber)}
+  .lg.ms{width:10px;height:10px;background:var(--ink);transform:rotate(45deg)} .lg.plan{width:10px;height:10px;border:2px solid var(--red);transform:rotate(45deg);background:#fff} .lg.today{width:2px;height:12px;background:var(--blue)}
+  .g-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-top:1px solid var(--line)}
+  .g-wrap svg{display:block}
+  .g-wrap .row:hover rect.hit,.g-wrap .row.sel rect.hit{fill:#f3f4f6}
+  .g-detail{margin-top:10px;padding:10px 12px;background:#f7f7f5;border-radius:8px;font-size:14px}
+  .g-detail h3{margin:0 0 4px;font-size:16px}
+  .g-detail ul{margin:6px 0 0;padding-left:18px} .g-detail li{margin:3px 0}
+  .g-detail a{color:var(--blue)}
+  .num a{color:var(--blue);font-size:12px}
+  footer{margin-top:48px;padding-top:14px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+  @media (max-width:520px){#tab-crono thead{display:none}#tab-crono tr{display:block;border-bottom:1px solid var(--line);padding:8px 0}#tab-crono td{display:block;border:none;padding:2px 0}#tab-crono td:first-child{font-weight:700}#tab-crono td[data-l]::before{content:attr(data-l) ": ";color:var(--muted);font-size:13px}td.src,.src{white-space:normal}td.src a{display:inline-block;margin:0 0 3px}th,td{padding:8px 4px}table{font-size:14px}.card{padding:12px}h1{font-size:27px}.bar-row{grid-template-columns:70px 1fr}.promise{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="kicker">PratoMiMuovo · Osservatorio</div>
+  <h1>Sottopasso del Soccorso</h1>
+  <p class="sub">Raddoppio della Declassata tra via Marx e via Nenni. Costi, tempi e atti dall'annuncio a oggi, con la fonte di ogni dato. Aggiornato al <b id="agg"></b>.</p>
+  <nav><a href="#sintesi">Costi e cronoprogramma</a><a href="#stato">A che punto siamo</a><a href="#cronoprogramma">Cronoprogramma</a><a href="#costi">Quanto costa</a><a href="#finanziamenti">Finanziamenti</a><a href="#tempi">Promesse sui tempi</a><a href="#documenti">Documenti</a><a href="#cronologia">Cronologia</a><a href="#fonti">Fonti</a><a href="#dati">Scarica i dati</a></nav>
+</header>
+
+
+<section id="sintesi">
+  <h2 style="margin-top:8px">Costi aggiornati</h2>
+  <p class="lead">Solo cifre da atti ufficiali. Aggiornato al <span class="agg"></span>.</p>
+  <div class="nums" id="costi-top"></div>
+
+  <h2>Cronoprogramma</h2>
+  <p class="lead">Solo date da atti e siti ufficiali. Tocca una barra per i dettagli e i link alle fonti.</p>
+  <div class="card">
+    <div class="g-ctrl" id="g-zoom"></div>
+    <div class="g-legend"><span><i class="lg bar"></i>fase svolta</span><span><i class="lg late"></i>ritardo sul previsto</span><span><i class="lg run"></i>in corso</span><span><i class="lg ms"></i>atto / evento</span><span><i class="lg plan"></i>data prevista</span><span><i class="lg today"></i>oggi</span></div>
+    <div class="g-wrap" id="g-wrap"></div>
+    <div class="g-detail" id="g-detail">Seleziona una voce del cronoprogramma.</div>
+  </div>
+</section>
+
+<section id="stato">
+  <div class="status">
+    <p class="big">I lavori non sono ancora iniziati.</p>
+    <ul>
+      <li>L'appalto è aggiudicato: lo esegue CMC di Ravenna, subentrata a Manelli Impresa. <span class="src" data-src="F18,F22"></span></li>
+      <li>La progettazione esecutiva è partita l'11 marzo 2026 con una consegna parziale anticipata di Anas. <span class="src" data-src="F58"></span></li>
+      <li>Il Comune indicava l'apertura del cantiere per fine 2026: a oggi non è aperto. <span class="src" data-src="F30"></span></li>
+      <li>Sulla Declassata passano circa 55.000 veicoli al giorno, che dalla seconda fase saranno deviati sulle strade comunali a sud. <span class="src" data-src="F58"></span></li>
+      <li>Durata prevista: 1.100 giorni (erano 900 nel progetto del 2018). <span class="src" data-src="F13,F52"></span></li>
+    </ul>
+  </div>
+  <div class="nums">
+    <div class="num"><div class="v">43,4 → <span class="red">67,3</span> mln</div><div class="l">quadro economico del tunnel: progetto di fattibilità 2018 → progetto definitivo 2024</div></div>
+    <div class="num"><div class="v amber">+10,8 mln</div><div class="l">opere collegate pagate da altri bilanci (complanari e strada Prato-Campi)</div></div>
+    <div class="num"><div class="v">900 → <span class="red">1.100</span> gg</div><div class="l">durata dei lavori: cronoprogramma Anas 2018 → progetto definitivo 2024</div></div>
+    <div class="num"><div class="v">12 anni</div><div class="l">dall'avvio dell'operazione (2014) a oggi, senza cantiere del tunnel</div></div>
+  </div>
+</section>
+
+
+<section id="cronoprogramma">
+  <h2>Cronoprogramma</h2>
+  <p class="lead">Solo date da atti e siti ufficiali (Anas, Comune, Regione, Ministeri). Dove un ente aveva indicato una data, la confrontiamo con quella reale.</p>
+  <div class="card"><table id="tab-crono"><thead><tr><th>Passo</th><th>Stato</th><th>Data ufficiale</th><th>Previsto</th><th>Ritardo</th><th>Fonte</th></tr></thead><tbody></tbody></table><p class="note">Le date annunciate a voce e riportate dalla stampa sono nella sezione «Promesse sui tempi», separate da qui.</p></div>
+
+  <h2>Le quattro fasi del cantiere</h2>
+  <p class="lead">Come il Comune descrive i 1.100 giorni di lavori, confrontati con i 30 mesi del cronoprogramma Anas del 2018.</p>
+  <div class="card" id="fasi"></div>
+</section>
+
+
+<section id="costi">
+  <h2>Quanto costa</h2>
+  <p class="lead">Le stime del costo del tunnel, nel tempo. Nel 2018 la stampa riportava 46 milioni; il quadro economico ufficiale dice 43,36.</p>
+  <div class="card"><div class="bars" id="bars-costi"></div>
+  <p class="note">Il contratto firmato con l'impresa vale 47,75 milioni: è la parte lavori del quadro economico, dopo il ribasso di gara. <span class="src" data-src="F18,F19"></span></p></div>
+
+  <h2>Il conto complessivo</h2>
+  <p class="lead">Il tunnel più le opere fatte o finanziate per poterlo costruire.</p>
+  <div class="card">
+    <table id="tab-conto"><thead><tr><th>Opera</th><th>Chi paga</th><th style="text-align:right">Euro</th><th>Fonte</th></tr></thead><tbody></tbody></table>
+    <p class="note">Il totale è una somma fatta da noi con le cifre pubbliche, non un dato ufficiale: nessun ente ha pubblicato un costo complessivo. Per le complanari usiamo le cifre della scheda del Comune: 70.000 euro più esproprio (non quantificato) per il lotto 1, circa 3 milioni per il lotto 2. Nel 2019 la stampa riportava 4,8 milioni in tutto. <span class="src" data-src="F31,F09"></span></p>
+  </div>
+
+  <h2>Chi paga il tunnel</h2>
+  <p class="lead">Le coperture del progetto definitivo approvato il 29 ottobre 2024.</p>
+  <div class="card"><div class="bars" id="bars-coperture"></div></div>
+</section>
+
+<section id="finanziamenti">
+  <h2>Finanziamenti del Governo e di Anas</h2>
+  <p class="lead">Gli atti che finanziano il tunnel. Gli importi sono quelli del quadro economico approvato nel 2024.</p>
+  <div class="card"><table id="tab-fin"><thead><tr><th>Atto</th><th>Data</th><th style="text-align:right">Euro</th><th>Fonte</th></tr></thead><tbody></tbody></table>
+  <p class="note">Le delibere sul Contratto di programma 2016-2020 inseriscono l'opera nella programmazione Anas, ma senza un importo dedicato nelle fonti trovate. Il Comune aveva previsto una quota propria di 9-10 milioni sull'accordo del 2015-2017; nel quadro economico 2024 non c'è una quota comunale. Nota nostra: i 12.358.318,80 euro del Fondo Unico Anas sono esattamente la differenza tra il quadro economico del 2018 (43.358.318,80) e i 31 milioni annunciati. <span class="src" data-src="F03,F38,F13,F53"></span></p></div>
+</section>
+
+<section id="tempi">
+  <h2>Quando partono i lavori</h2>
+  <p class="lead">Le date di avvio annunciate, in ordine di dichiarazione.</p>
+  <div class="card" id="promesse"></div>
+</section>
+
+<section id="cronologia">
+  <h2>Cronologia</h2>
+  <p class="lead">Ogni passaggio, con la sua fonte. In arancione le opere collegate.</p>
+  <div class="filters" id="filters"></div>
+  <ul class="tl" id="tl"></ul>
+</section>
+
+
+<section id="documenti">
+  <h2>Documenti di progetto</h2>
+  <p class="lead">Dove leggere il progetto, fase per fase.</p>
+  <div class="card"><table id="tab-doc"><thead><tr><th>Documento</th><th>Fase</th><th>Fonte</th></tr></thead><tbody></tbody></table>
+  <p class="note">Il sito del Comune non consente la lettura automatica: le sue pagine sono state lette dall'indice dei motori di ricerca. Apri i link per il testo completo.</p></div>
+</section>
+
+<section id="fonti">
+  <h2>Fonti</h2>
+  <p class="lead">Atti ufficiali e articoli di stampa. Le sigle (F01, F02…) sono quelle usate in tutta la pagina e nei dati.</p>
+  <ol class="fonti" id="lista-fonti"></ol>
+</section>
+
+<section id="dati">
+  <h2>Scarica i dati</h2>
+  <p class="lead">File CSV aperti (separatore virgola, UTF-8), licenza CC BY 4.0. Anche su <a href="https://github.com/iltempe/osservatorio-soccorso" target="_blank" rel="noopener">GitHub</a>.</p>
+  <div class="dl" id="dl"></div>
+  <p class="note">Metodo: inseriamo solo fatti con una fonte verificabile, privilegiando gli atti ufficiali. Le somme sono calcolate da noi e segnalate come tali. Se trovi un errore o un atto mancante, scrivici.</p>
+</section>
+
+<footer>A cura di Matteo Tempestini · @iltempe · PratoMiMuovo<br>Dati e testi con licenza <a href="https://creativecommons.org/licenses/by/4.0/deed.it" target="_blank" rel="noopener">CC BY 4.0</a>: riusali citando «Osservatorio Sottopasso del Soccorso – PratoMiMuovo». Codice e dati: <a href="https://github.com/iltempe/osservatorio-soccorso" target="_blank" rel="noopener">github.com/iltempe/osservatorio-soccorso</a></footer>
+</div>
+
+<script>
+const D = /*DATA*/;
+const CSV = /*CSV*/;
+const fonti = Object.fromEntries(D.fonti.map(f=>[f.id,f]));
+const eur = v => v==null ? "" : new Intl.NumberFormat("it-IT",{maximumFractionDigits:0}).format(v);
+const mln = v => new Intl.NumberFormat("it-IT",{maximumFractionDigits:1}).format(v/1e6)+" mln";
+const mesi = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+const fdata = s => { const p=s.split("-"); if(p.length===1) return p[0]; if(p.length===2) return mesi[+p[1]-1]+" "+p[0]; return (+p[2])+" "+mesi[+p[1]-1]+" "+p[0]; };
+const srcHTML = ids => ids.split(",").map(i=>i.trim()).filter(Boolean).map(i=>`<a href="${fonti[i].url}" target="_blank" rel="noopener" title="${fonti[i].editore}: ${fonti[i].titolo.replace(/"/g,'&quot;')}">${i} · ${(()=>{try{return new URL(fonti[i].url).hostname.replace(/^www\d*\./,'').replace('accountability-backend.','')}catch(e){return ''}})()} ↗</a>`).join("");
+
+document.getElementById("agg").textContent = fdata(D.aggiornato);
+document.querySelectorAll(".src[data-src]").forEach(el=>el.innerHTML=srcHTML(el.dataset.src));
+
+function bars(el, rows, cls){
+  const max = Math.max(...rows.map(r=>r.v));
+  el.innerHTML = rows.map(r=>{
+    const w = (r.v/max*100);
+    const out = w<38;
+    return `<div class="bar-row"><div><b>${r.k}</b></div><div class="bar-track"><div class="bar-fill ${cls||""}" style="width:${w}%"></div><span class="bar-lab ${out?"out":""}" style="${out?`left:calc(${w}% + 8px)`:""}">${mln(r.v)}</span></div><div class="bar-note">${r.n} <span class="src">${srcHTML(r.s)}</span></div></div>`;
+  }).join("");
+}
+bars(document.getElementById("bars-costi"), D.costi.map(c=>({k:fdata(c.data),v:c.stima_eur,n:c.cosa,s:c.fonti})));
+bars(document.getElementById("bars-coperture"), D.coperture.map(c=>({k:"",v:c.importo_eur,n:c.fonte_finanziaria,s:c.fonti})), "blue");
+document.querySelectorAll("#bars-coperture .bar-row").forEach(r=>r.style.gridTemplateColumns="0 1fr");
+
+const qe = D.costi[D.costi.length-1];
+const righe = [{opera:"Tunnel – quadro economico del progetto definitivo",ente:"Stato e Anas",importo_eur:qe.stima_eur,fonti:qe.fonti}].concat(D.opere_collegate.map(o=>({opera:o.opera,ente:o.ente,importo_eur:o.importo_eur,fonti:o.fonti})));
+const tot = righe.reduce((a,r)=>a+r.importo_eur,0);
+document.querySelector("#tab-conto tbody").innerHTML = righe.map(r=>`<tr><td>${r.opera}</td><td>${r.ente}</td><td class="n">${eur(r.importo_eur)}</td><td class="src">${srcHTML(r.fonti)}</td></tr>`).join("") + `<tr class="tot"><td>Totale (somma nostra)</td><td></td><td class="n">${eur(tot)}</td><td></td></tr>`;
+
+document.getElementById("promesse").innerHTML = D.promesse.map(p=>`<div class="promise"><div class="who">${fdata(p.data_dichiarazione)}</div><div><div class="when">${p.avvio_lavori_previsto}</div><div class="who">${p.chi} <span class="src">${srcHTML(p.fonti)}</span></div></div></div>`).join("");
+
+const opere = ["Tutto","Tunnel","Complanari","Prato-Campi"];
+let filtro = "Tutto";
+function drawTL(){
+  document.getElementById("filters").innerHTML = opere.map(o=>`<button class="${o===filtro?"on":""}" data-o="${o}">${o==="Prato-Campi"?"Strada Prato-Campi":o}</button>`).join("");
+  document.querySelectorAll("#filters button").forEach(b=>b.onclick=()=>{filtro=b.dataset.o;drawTL();});
+  document.getElementById("tl").innerHTML = D.eventi.filter(e=>filtro==="Tutto"||e.opera===filtro).map(e=>{
+    const aus = e.opera!=="Tunnel";
+    return `<li class="${e.opera}"><div class="d">${fdata(e.data)}<span class="tag ${aus?"ausiliaria":""}">${aus?(e.opera==="Prato-Campi"?"Strada Prato-Campi":e.opera):e.fase}</span></div><p class="e">${e.evento}</p><span class="src">${srcHTML(e.fonti)}</span></li>`;
+  }).join("");
+}
+drawTL();
+
+
+const pillCls = s => s==="fatto"?"fatto":(s==="in corso"?"in":"da");
+document.querySelector("#tab-crono tbody").innerHTML = D.cronoprogramma.map(c=>`<tr><td>${c.passo}</td><td><span class="pill ${pillCls(c.stato)}">${c.stato}</span></td><td data-l="Data ufficiale">${c.data_ufficiale||"—"}</td><td data-l="Previsto">${c.previsione_ufficiale||"—"}</td><td data-l="Ritardo">${c.ritardo?`<b class="red">${c.ritardo}</b>`:"—"}</td><td class="src">${srcHTML(c.fonti)}</td></tr>`).join("");
+document.getElementById("fasi").innerHTML = D.fasi_cantiere.map(f=>`<div class="fase"><div><div class="m">${f.mesi} ${f.mesi===1?"mese":"mesi"}</div><div class="who" style="font-size:13px;color:var(--muted)">${f.fase}</div></div><div>${f.cosa}<div class="note" style="margin:3px 0 0">Nel cronoprogramma 2018: ${f.mesi_2018}</div> <span class="src">${srcHTML(f.fonti)}</span></div></div>`).join("");
+document.querySelector("#tab-fin tbody").innerHTML = D.atti_finanziamento.map(a=>`<tr><td>${a.atto}</td><td>${a.data}</td><td class="n">${a.importo_eur?eur(a.importo_eur):"—"}</td><td class="src">${srcHTML(a.fonti)}</td></tr>`).join("") + `<tr class="tot"><td>Totale quadro economico</td><td></td><td class="n">${eur(D.atti_finanziamento.reduce((s,a)=>s+(a.importo_eur||0),0))}</td><td></td></tr>`;
+document.querySelector("#tab-doc tbody").innerHTML = D.documenti_progetto.map(d=>`<tr><td>${d.documento}</td><td>${d.fase}</td><td class="src">${srcHTML(d.fonti)}</td></tr>`).join("");
+
+
+document.querySelectorAll(".agg").forEach(e=>e.textContent=fdata(D.aggiornato));
+const dom = u => { try { return new URL(u).hostname.replace(/^www\d*\./,""); } catch(e){ return ""; } };
+const srcList = ids => ids.split(",").map(i=>i.trim()).filter(Boolean).map(i=>`<li><b>${i}</b> <a href="${fonti[i].url}" target="_blank" rel="noopener">${fonti[i].titolo}</a> — ${fonti[i].editore} <span style="color:var(--muted)">(${dom(fonti[i].url)})</span></li>`).join("");
+(function(){
+  const qe = D.costi[D.costi.length-1], q18 = D.costi.find(c=>c.data.startsWith("2018"));
+  const col = D.opere_collegate.reduce((s,o)=>s+o.importo_eur,0);
+  const cards = [
+    {v:mln(qe.stima_eur), l:"quadro economico del tunnel (progetto definitivo, 29/10/2024)", s:qe.fonti},
+    {v:`+${new Intl.NumberFormat("it-IT",{maximumFractionDigits:0}).format((qe.stima_eur/q18.stima_eur-1)*100)}%`, l:`rispetto al progetto di fattibilità 2018 (${mln(q18.stima_eur)})`, s:q18.fonti+","+qe.fonti},
+    {v:"+"+mln(col), l:"opere collegate: complanari (Comune) e strada Prato-Campi (Regione)", s:"F31,F59"},
+    {v:mln(qe.stima_eur+col), l:"totale delle cifre ufficiali note (somma nostra; esclude l'esproprio del lotto 1)", s:"F13,F31,F59"},
+  ];
+  document.getElementById("costi-top").innerHTML = cards.map(c=>`<div class="num"><div class="v">${c.v}</div><div class="l">${c.l}</div><div class="src" style="margin-top:6px">${srcHTML(c.s)}</div></div>`).join("");
+})();
+(function(){
+  const G = D.gantt, today = new Date(D.aggiornato);
+  const P = s => s ? new Date(s) : null;
+  const zooms = [["Tutto",2014,2027.4],["2014-2019",2014,2020],["2020-2024",2020,2025],["2025-oggi",2025,2027.5]];
+  let z = 0, sel = null;
+  function draw(){
+    document.getElementById("g-zoom").innerHTML = zooms.map((q,i)=>`<button class="${i===z?"on":""}" data-z="${i}">${q[0]}</button>`).join("");
+    document.querySelectorAll("#g-zoom button").forEach(b=>b.onclick=()=>{z=+b.dataset.z;draw();});
+    const [ ,y0,y1] = zooms[z];
+    const cw=document.getElementById("g-wrap").clientWidth, narrow=cw<600, LW = narrow?150:240, W = Math.max(cw, narrow?680:760), PW = W-LW-10, RH = 26, ML = narrow?22:36;
+    const t0 = new Date(Math.floor(y0),Math.round((y0%1)*12),1), t1 = new Date(Math.floor(y1),Math.round((y1%1)*12),1);
+    const X = d => LW + (d - t0)/(t1 - t0)*PW;
+    const inR = d => d && d>=t0 && d<=t1;
+    let rows=[], y=24, lastG="";
+    G.forEach((g,i)=>{ if(g.gruppo!==lastG){ rows.push({hdr:g.gruppo,y}); y+=RH; lastG=g.gruppo; } rows.push({g,i,y}); y+=RH; });
+    const H = y+8;
+    let s = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif" font-size="12">`;
+    for(let yr=Math.ceil(y0); yr<=Math.floor(y1); yr++){ const x=X(new Date(yr,0,1)); if(x>W-30) continue; s+=`<line x1="${x}" y1="18" x2="${x}" y2="${H}" stroke="#e4e6ea"/><text x="${x+3}" y="13" fill="#5b616e">${yr}</text>`; }
+    rows.forEach(r=>{
+      if(r.hdr){ s+=`<text x="4" y="${r.y+17}" font-weight="700" fill="#16181d">${r.hdr}</text>`; return; }
+      const g=r.g, cy=r.y+RH/2, a=P(g.inizio), b=P(g.fine), pv=P(g.previsto);
+      s+=`<g class="row${sel===r.i?" sel":""}" data-i="${r.i}" style="cursor:pointer"><rect class="hit" x="0" y="${r.y}" width="${W}" height="${RH}" fill="transparent"/>`;
+      s+=`<text x="12" y="${cy+4}" fill="#16181d" font-size="${narrow?11:12}">${g.voce.length>ML?g.voce.slice(0,ML-1)+"…":g.voce}</text>`;
+      const clipA = d => new Date(Math.min(Math.max(d,t0),t1));
+      if(g.tipo==="fase" && a && b && (b>=t0 && a<=t1)){
+        const xa=X(clipA(a)), xb=X(clipA(b));
+        if(pv && pv<b){ const xp=X(clipA(pv)); s+=`<rect x="${xa}" y="${cy-6}" width="${Math.max(2,xp-xa)}" height="12" rx="2" fill="#16181d"/><rect x="${xp}" y="${cy-6}" width="${Math.max(2,xb-xp)}" height="12" fill="url(#late)"/>`; }
+        else s+=`<rect x="${xa}" y="${cy-6}" width="${Math.max(3,xb-xa)}" height="12" rx="2" fill="#16181d"/>`;
+      }
+      if(g.tipo==="in_corso" && a && a<=t1){ const xa=X(clipA(a)), xb=X(clipA(today)); s+=`<rect x="${xa}" y="${cy-6}" width="${Math.max(3,xb-xa)}" height="12" rx="2" fill="#b7791f"/>`; }
+      if(g.tipo==="milestone" && inR(a)){ const x=X(a); s+=`<rect x="${x-5}" y="${cy-5}" width="10" height="10" transform="rotate(45 ${x} ${cy})" fill="#16181d"/>`; }
+      if(pv && inR(pv)){ const x=X(pv); s+=`<rect x="${x-5}" y="${cy-5}" width="10" height="10" transform="rotate(45 ${x} ${cy})" fill="#fff" stroke="#c8312b" stroke-width="2"/>`; }
+      if(g.tipo==="senza_data"){ s+=`<text x="${LW+4}" y="${cy+4}" fill="#5b616e" font-style="italic">nessuna data ufficiale di inizio</text>`; }
+      if(g.ritardo && g.tipo==="fase" && b && inR(b)){ s+=`<text x="${X(b)+6}" y="${cy+4}" fill="#c8312b" font-weight="700">+${g.ritardo}</text>`; }
+      s+=`</g>`;
+    });
+    if(inR(today)){ const x=X(today); s+=`<line x1="${x}" y1="18" x2="${x}" y2="${H}" stroke="#2b5fa8" stroke-width="2"/><text x="${x-4}" y="${H-4}" fill="#2b5fa8" text-anchor="end" font-weight="700">oggi</text>`; }
+    s+=`<defs><pattern id="late" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#f3c6c3"/><rect width="3" height="6" fill="#c8312b"/></pattern></defs></svg>`;
+    document.getElementById("g-wrap").innerHTML = s;
+    document.querySelectorAll("#g-wrap .row").forEach(el=>el.addEventListener("click",()=>{ sel=+el.dataset.i; show(G[sel]); draw(); }));
+  }
+  function show(g){
+    const r = [];
+    if(g.inizio) r.push(`<b>${g.fine||g.tipo==="in_corso"?"Inizio":"Data"}:</b> ${fdata(g.inizio)}`);
+    if(g.fine) r.push(`<b>Fine:</b> ${fdata(g.fine)}`);
+    if(g.tipo==="in_corso") r.push(`<b>Stato:</b> in corso`);
+    if(g.previsto) r.push(`<b>Previsto:</b> ${fdata(g.previsto)}`);
+    if(g.ritardo) r.push(`<b class="red">Ritardo: ${g.ritardo}</b>`);
+    document.getElementById("g-detail").innerHTML = `<h3>${g.voce}</h3><div>${r.join(" · ")}</div><p style="margin:6px 0">${g.nota}</p><b>Fonti</b><ul>${srcList(g.fonti)}</ul>`;
+  }
+  draw(); window.addEventListener("resize", draw);
+})();
+
+document.getElementById("lista-fonti").innerHTML = D.fonti.map(f=>`<li><span class="id">${f.id}</span><a href="${f.url}" target="_blank" rel="noopener">${f.titolo}</a> — ${f.editore}<span class="tipo ${f.tipo==="stampa"?"stampa":"atto"}">${f.tipo}</span><div style="font-size:12px;color:var(--muted);word-break:break-all">${f.url}</div></li>`).join("");
+
+const files = [["cronoprogramma.csv","Cronoprogramma"],["fasi_cantiere.csv","Fasi del cantiere"],["atti_finanziamento.csv","Atti di finanziamento"],["documenti_progetto.csv","Documenti di progetto"],["eventi.csv","Cronologia degli eventi"],["costi.csv","Stime di costo nel tempo"],["quadro_economico.csv","Quadro economico 2024"],["coperture.csv","Coperture finanziarie"],["promesse.csv","Date di avvio annunciate"],["opere_collegate.csv","Opere collegate"],["fonti.csv","Elenco delle fonti"]];
+document.getElementById("dl").innerHTML = files.map(([f,l])=>`<div class="dl-row"><span class="name">${l}</span><a href="dati/${f}" target="_blank" rel="noopener">Apri ${f}</a><button data-f="${f}">Copia CSV</button><span class="msg" id="m-${f.replace('.','_')}"></span></div>`).join("");
+document.querySelectorAll("#dl button").forEach(b=>b.onclick=async()=>{
+  const m=document.getElementById("m-"+b.dataset.f.replace('.','_'));
+  try{await navigator.clipboard.writeText(CSV[b.dataset.f]);m.textContent="Copiato";}catch(e){m.textContent="Copia non riuscita: apri il file";}
+});
+</script>
+</body>
+</html>
