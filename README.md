@@ -10,6 +10,10 @@ Online: https://iltempe.github.io/osservatorio-soccorso/
 
 Il sito è `index.html`, una pagina unica senza dipendenze esterne. `social.png` è l'immagine di anteprima per i social (sorgente in `sorgente/social.html`, icona in `sorgente/icona.svg`).
 
+## Statistiche
+
+Le visite sono contate con [GoatCounter](https://www.goatcounter.com/) (senza cookie, senza dati personali): https://soccorso.goatcounter.com/. Sono registrati come eventi anche i clic su condivisione e download dei dati.
+
 ## Dati
 
 File CSV in UTF-8, separatore virgola. Ogni riga ha la colonna `fonti` (codici F01…) e `fonti_url` (link completi).

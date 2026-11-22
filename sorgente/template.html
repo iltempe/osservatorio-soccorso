@@ -380,6 +380,18 @@ const srcList = ids => ids.split(",").map(i=>i.trim()).filter(Boolean).map(i=>`<
   b.onclick=async()=>{ try{ await navigator.clipboard.writeText(url); m.textContent="Link copiato"; }catch(e){ m.textContent=url; } };
 })();
 
+
+// eventi GoatCounter: condivisioni e dati
+const gcEvent = (path, title) => { try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path, title, event:true}); } catch(e){} };
+document.addEventListener("click", ev => {
+  const a = ev.target.closest(".sh, #dl a, #dl button");
+  if (!a) return;
+  if (a.dataset.net) gcEvent("condividi-"+a.dataset.net, "Condivisione "+a.dataset.net);
+  else if (a.id==="sh-copy") gcEvent("condividi-copia-link", "Copia link");
+  else if (a.dataset.f) gcEvent("dati-copia-"+a.dataset.f, "Copia "+a.dataset.f);
+  else if (a.getAttribute("href")) gcEvent("dati-apri-"+a.getAttribute("href").split("/").pop(), "Apri "+a.getAttribute("href"));
+});
+
 document.getElementById("lista-fonti").innerHTML = D.fonti.map(f=>`<li><span class="id">${f.id}</span><a href="${f.url}" target="_blank" rel="noopener">${f.titolo}</a> — ${f.editore}<span class="tipo ${f.tipo==="stampa"?"stampa":"atto"}">${f.tipo}</span><div style="font-size:12px;color:var(--muted);word-break:break-all">${f.url}</div></li>`).join("");
 
 const files = [["cronoprogramma.csv","Cronoprogramma"],["fasi_cantiere.csv","Fasi del cantiere"],["atti_finanziamento.csv","Atti di finanziamento"],["documenti_progetto.csv","Documenti di progetto"],["eventi.csv","Cronologia degli eventi"],["costi.csv","Stime di costo nel tempo"],["quadro_economico.csv","Quadro economico 2024"],["coperture.csv","Coperture finanziarie"],["promesse.csv","Date di avvio annunciate"],["opere_collegate.csv","Opere collegate"],["fonti.csv","Elenco delle fonti"]];
@@ -389,5 +401,6 @@ document.querySelectorAll("#dl button").forEach(b=>b.onclick=async()=>{
   try{await navigator.clipboard.writeText(CSV[b.dataset.f]);m.textContent="Copiato";}catch(e){m.textContent="Copia non riuscita: apri il file";}
 });
 </script>
+<script data-goatcounter="https://soccorso.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
