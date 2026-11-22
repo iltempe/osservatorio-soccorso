@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs><clipPath id="lens"><circle cx="86" cy="86" r="58"/></clipPath></defs>
+  <circle cx="86" cy="86" r="58" fill="#23262e"/>
+  <g clip-path="url(#lens)">
+    <rect x="20" y="20" width="140" height="140" fill="#2b5fa8"/>
+    <rect x="20" y="100" width="140" height="60" fill="#3d7a4f"/>
+    <path d="M38 100 A48 48 0 0 1 134 100 Z" fill="#16181d"/>
+    <path d="M50 100 A36 36 0 0 1 122 100 Z" fill="#0d0e11"/>
+    <polygon points="62,100 110,100 150,160 22,160" fill="#3a3d45"/>
+    <polygon points="83,104 89,104 90,114 82,114" fill="#ffd27a"/>
+    <polygon points="81,122 91,122 93,138 79,138" fill="#ffd27a"/>
+    <polygon points="78,146 94,146 96,160 76,160" fill="#ffd27a"/>
+  </g>
+  <circle cx="86" cy="86" r="58" fill="none" stroke="#ffffff" stroke-width="12"/>
+  <line x1="129" y1="129" x2="178" y2="178" stroke="#ffffff" stroke-width="20" stroke-linecap="round"/>
+  <line x1="129" y1="129" x2="140" y2="140" stroke="#ff6b5f" stroke-width="20" stroke-linecap="round"/>
+</svg>

@@ -8,7 +8,7 @@ Aggiornato al **2026-11-22**. A cura di Matteo Tempestini – [github.com/iltemp
 
 Online: https://iltempe.github.io/osservatorio-soccorso/
 
-Il sito è `index.html`, una pagina unica senza dipendenze esterne. `social.png` è l'immagine di anteprima per i social (sorgente in `sorgente/social.html`).
+Il sito è `index.html`, una pagina unica senza dipendenze esterne. `social.png` è l'immagine di anteprima per i social (sorgente in `sorgente/social.html`, icona in `sorgente/icona.svg`).
 
 ## Dati
 
