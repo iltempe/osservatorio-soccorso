@@ -1,5 +1,7 @@
 # Osservatorio Sottopasso del Soccorso
 
+🇮🇹 Italiano · 🇬🇧 [English](README.en.md)
+
 Monitoraggio civico del raddoppio della Declassata (SS 719, viale Leonardo da Vinci) al Soccorso, a Prato: costi, cronoprogramma, atti e finanziamenti, dall'annuncio a oggi. Ogni dato ha la sua fonte.
 
 Aggiornato al **2026-11-22**. A cura di Matteo Tempestini – [github.com/iltempe](https://github.com/iltempe) – mtempestini@gmail.com
@@ -108,6 +110,10 @@ File CSV in UTF-8, separatore virgola. Ogni riga ha la colonna `fonti` (codici F
 ## Licenza
 
 Dati, testi e sito sono distribuiti con licenza [Creative Commons Attribuzione 4.0 Internazionale (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/deed.it). Puoi riusarli citando: «Osservatorio Sottopasso del Soccorso – Matteo Tempestini», con il link a questo repository. I documenti delle fonti restano dei rispettivi titolari.
+
+## Parole chiave
+
+monitoraggio civico, civic tech, open data, dati aperti, trasparenza, opere pubbliche, accountability, Prato, Toscana, mobilità, Anas, cronoprogramma, Gantt.
 
 ## Correzioni
 
